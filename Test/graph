@@ -1,0 +1,141 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+void SetList(vector<int> *arr,int size)
+{
+    for (int i = 0; i < size; ++i)
+    {int temp;
+    cin>>temp;
+        while (temp!=0)
+        {
+            arr[i].push_back(temp);
+            cin>>temp;
+        }
+    }
+
+}
+void ShowTheList(vector<int> *arr,int size)
+{
+    for (int i = 0; i < size; ++i)
+    {cout<<i+1<<" :  ";
+        for (int j = 0; j < arr[i].size(); ++j) {
+            cout<<arr[i][j]<<"    ";
+        }
+    }
+
+}
+void IncToList (int **inc,int width,int height,vector<int> *arr)
+{int tempForPlus,tempForMinus;
+for (int i = 0; i <width ; ++i)
+{
+for (int j = 0; j < height; ++j) {
+if (inc[i][j] == 1) tempForPlus = j;
+if (inc[i][j] == -1) tempForMinus = j;
+}
+arr[tempForPlus].push_back(tempForMinus+1);
+}
+}
+void SetMatrix (int **matr, int width,int height)
+{cout<<"Insert matrix: "<<endl;
+    for (int i = 0; i <width ; ++i)
+        for (int j = 0; j <height ; ++j) {
+            cin>>matr[i][j];
+        }
+
+}
+void ShowMatrix (int **matr, int width,int height)
+{for (int i = 0; i < width; ++i) {
+    cout<<endl;
+         {for (int j = 0; j <height ; ++j)
+            cout << matr[i][j] << "    ";
+        }
+    }
+
+}
+void ShowTransponMatrix (int **matr, int width,int height)
+{for (int j = 0; j <height ; ++j) {
+        cout<<endl;
+        {for (int i = 0; i < width; ++i)
+                cout << matr[i][j] << "    ";
+        }
+    }
+
+}
+void MatrixToMatrix (int **inc,int width1,int height1,int **adj,int width2)
+{int tempForPlus,tempForMinus;
+    for (int i = 0; i <width1 ; ++i)
+    {
+        for (int j = 0; j < height1; ++j) {
+            if (inc[i][j] == 1) tempForPlus = j;
+            if (inc[i][j] == -1) tempForMinus = j;
+        }
+    adj[tempForPlus][tempForMinus]=1;
+        tempForPlus=0;
+        tempForMinus=0;
+
+    }
+    for (int i = 0; i <width2 ; ++i)
+        for (int j = 0; j <width2 ; ++j) {
+            if (adj[i][j]!=1) adj[i][j]=0;
+        }
+}
+void MatrixToMatrix2 (int **inc,int width1,int height1,int **adj,int width2)
+{int tempForPlus,tempForMinus,counter=0;
+    for (int i = 0; i <width2 ; ++i)
+    {
+        for (int j = 0; j < width2; ++j) {
+            if (adj[i][j]==1)  {tempForPlus=j;
+            tempForMinus=i;
+            inc[counter][tempForMinus]=-1;
+            inc[counter][tempForPlus]=1;
+            counter++;
+            tempForPlus=0;
+            tempForMinus=0;}
+        }
+        for (int i = 0; i <width1 ; ++i)
+            for (int j = 0; j <height1 ; ++j) {
+                if ((inc[i][j] != 1)&&(inc[i][j]!=-1)) inc[i][j]=0;
+            }
+}
+}
+int main() {
+
+int points,sides;
+cout<<"Insert number of points: ";
+cin>>points;
+cout<<"Insert number of sides";
+cin>>sides;
+vector<int> array[points];
+
+int **adjacencyMatrix=new int* [points];
+    for (int i = 0; i <points ; ++i)
+        adjacencyMatrix[i]=new int [points];
+int **incidenceMatrix=new int* [sides];
+    for (int i = 0; i <sides ; ++i)
+        incidenceMatrix[i]=new int [points];
+int switcher;
+cout<<"1. Incidence matrix to the list"<<endl;
+cout<<"2. Adjacency matrix to incidence matrix"<<endl;
+cout<<"3. Incidence matrix to adjacency matrix"<<endl;
+cin>>switcher;
+    switch (switcher) {
+        case 1:
+            SetMatrix(incidenceMatrix,sides,points);
+            IncToList(incidenceMatrix,sides,points,array);
+            ShowTheList(array,points);
+            break;
+        case 2:
+            SetMatrix(adjacencyMatrix,points,points);
+            MatrixToMatrix2(incidenceMatrix,sides,points,adjacencyMatrix,points);
+            ShowTransponMatrix(incidenceMatrix,sides,points);
+            break;
+        case 3:
+            SetMatrix(incidenceMatrix,sides,points);
+            MatrixToMatrix(incidenceMatrix,sides,points,adjacencyMatrix,points);
+            ShowMatrix(adjacencyMatrix,sides,points);
+            break;
+
+    }
+    return 0;
+
+}
